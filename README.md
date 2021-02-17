@@ -171,6 +171,6 @@ describe.only('[PUPPETEER] BrowserWrapper Tests', function () {
         await browserWrapper.disconnect()
         spy // <-- contains details about the event if fired and so on..
         debugger
-    }).timeout(60000 * 5)
+    })
 })
 ```
