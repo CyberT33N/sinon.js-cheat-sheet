@@ -80,18 +80,7 @@ _________________________________
 
 ## Using a spy to wrap an existing method
 ```javascript
-require("@fatso83/mini-mocha").install();
-
-const sinon = require("sinon");
-const referee = require("@sinonjs/referee");
-const assert = referee.assert;
-const jsdom = require("jsdom");
-const JSDOM = jsdom.JSDOM;
-const window = new JSDOM().window;
-const document = new JSDOM("").window;
-const jQuery = require("jquery")(window);
-global.document = document;
-
+/*---- Example #1 ----*/
 describe("Wrap existing method", function() {
     const sandbox = sinon.createSandbox();
 
@@ -113,4 +102,75 @@ describe("Wrap existing method", function() {
     });
 });
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*---- Example #2 ----*/
+// BrowserWrapper.js
+module.exports = class BrowserWrapper {
+    constructor(host, port){
+        this.connectionService = new BrowserConnectionService(host, port)
+    }
+    
+    async connect() {
+        this.browser = await this.connectionService.connectToBrowser()
+        this.createDisconnectListener()
+    }
+
+    async disconnect() {
+        await this.browser.disconnect()
+    }
+
+    createDisconnectListener() {
+        this.browser.on('disconnected', this._onDisconnect.bind(this) )
+    }
+
+    async _onDisconnect() {
+        console.log('_onDisconnect')
+    }
+}
+
+// test.js
+describe.only('[PUPPETEER] BrowserWrapper Tests', function () {
+    this.timeout(60000 * 5)
+    let spy
+    
+    before(done => {
+        (async()=>{
+            spy = sinon.spy(browserWrapper, "_onDisconnect")
+            await browserWrapper.connect()
+        })().then(done).catch(done)
+    })
+
+    it('should fire disconnect listener', async () => {
+        await browserWrapper.disconnect()
+        spy // <-- contains details about the event if fired and so on..
+        debugger
+    }).timeout(60000 * 5)
+})
 ```
