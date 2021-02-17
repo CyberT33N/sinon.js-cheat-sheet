@@ -81,26 +81,61 @@ _________________________________
 ## Using a spy to wrap an existing method
 ```javascript
 /*---- Example #1 ----*/
-describe("Wrap existing method", function() {
-    const sandbox = sinon.createSandbox();
+// BrowserWrapper.js
+module.exports = class BrowserWrapper {
+    constructor(host, port){
+        this.connectionService = new BrowserConnectionService(host, port)
+    }
+    
+    async connect() {
+        this.browser = await this.connectionService.connectToBrowser()
+        this.createDisconnectListener()
+    }
 
-    beforeEach(function() {
-        sandbox.spy(jQuery, "ajax");
-    });
+    async disconnect() {
+        await this.browser.disconnect()
+    }
 
-    afterEach(function() {
-        sandbox.restore();
-    });
+    createDisconnectListener() {
+        this.browser.on('disconnected', this._onDisconnect.bind(this) )
+    }
 
-    it("should inspect jQuery.getJSON's usage of jQuery.ajax", function() {
-        const url = "https://jsonplaceholder.typicode.com/todos/1";
-        jQuery.getJSON(url);
+    async _onDisconnect() {
+        console.log('_onDisconnect')
+    }
+}
 
-        assert(jQuery.ajax.calledOnce);
-        assert.equals(url, jQuery.ajax.getCall(0).args[0].url);
-        assert.equals("json", jQuery.ajax.getCall(0).args[0].dataType);
-    });
-});
+// test.js
+describe.only('[PUPPETEER] BrowserWrapper Tests', function () {
+    this.timeout(60000 * 5)
+    let spy
+    const sandbox = sinon.createSandbox()
+
+    beforeEach(done => {
+        (async () => {
+            spy = sandbox.spy(browserWrapper, "_onDisconnect")
+            await browserWrapper.connect()
+        })().then(done).catch(done)
+    })
+
+    afterEach(async () => {
+        sandbox.restore()
+        await browserWrapper.disconnect()
+    })
+
+   it('should fire disconnect listener', async () => {
+        await browserWrapper.disconnect()
+        expect(spy.called).to.equal(true)
+    })
+
+    it('simulate multiple connects and only one disconnect listener should be fired', async () => {
+        await browserWrapper.connect()
+        await browserWrapper.connect()
+        await browserWrapper.connect()
+        await browserWrapper.disconnect()
+        expect(spy.calledOnce).to.equal(true)
+    })
+})
 
 
 
