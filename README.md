@@ -20,11 +20,37 @@ _________________________________
 <br><br>
 
 
-# Stub dependencies
+# Stub
+
+
+
+## Mongoose Models
+```javascript
+const sinon = require('sinon')
+const mongoose = require('mongoose')
+
+var UserSchema = new mongoose.Schema({name: String});
+const Model = mongoose.model('User', UserSchema);
+
+const find = () => {
+    return {_id: '12345678912', name: 'test'}
+}
+
+sinon.stub(Model, 'find').callsFake(find)
+
+const doc = Model.find()
+console.log(doc)
+```
+
+<br><br>
+<br><br>
+
+
+## Dependencies
 
 <br><br>
 
-## request
+#### request
 ```javascript
 describe('storeMessages()', () => {
   before(()=>{
