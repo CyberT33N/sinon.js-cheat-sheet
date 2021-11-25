@@ -111,11 +111,11 @@ _________________________________
 let spy
 
 beforeEach(() => {
-    spy = sinon.spy(bootstrap)
+    spy = sinon.spy(bootstrapObj, 'bootstrap')
 })
 
 afterEach(() => {
-    spy.resetHistory()
+    spy.restore()
 })
 
 it('should throw error because app is missing', async () => {
