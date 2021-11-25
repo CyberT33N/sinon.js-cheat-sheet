@@ -102,6 +102,34 @@ _________________________________
 
 # Spy (https://sinonjs.org/releases/latest/spies/)
 
+
+
+<br><br>
+
+## Reset spy
+```javascript
+let spy
+
+beforeEach(() => {
+    spy = sinon.spy(bootstrap)
+})
+
+afterEach(() => {
+    spy.resetHistory()
+})
+
+it('should throw error because app is missing', async () => {
+    try {
+        await spy();
+    } catch (e) {
+        expect(e.message).to.be.equal('Can not find app for bootstrapping')
+        spy.called = false
+    }
+
+    expect(spy.called).to.be.equal(false)
+})
+```
+
 <br><br>
 
 ## Using a spy to wrap an existing method
