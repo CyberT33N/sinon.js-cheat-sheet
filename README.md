@@ -263,3 +263,136 @@ describe.only('[PUPPETEER] BrowserWrapper Tests', function () {
     })
 })
 ```
+
+
+
+
+
+
+
+
+<br><br>
+<br><br>
+
+
+## Express
+
+<br><br>
+
+### Middleware
+
+<br><br>
+
+#### Spy middleware
+
+- Variant #1
+```javascript
+// routes.js
+const proxy = require('express-http-proxy')
+
+const routeBase = '/v1/Conditions'
+
+// Die Middleware-Funktion, die getestet werden soll
+const middleware = (req, res, next) => {
+  // Mach etwas ...
+  next();
+};
+
+module.exports = router => {
+    router.use(routeBase, middleware)
+}
+
+
+// ---------------------------------------------------------------------------
+
+
+
+
+describe('Bug test', () => {
+   let router, app, masterRouter
+
+   beforeEach(() => {
+        app = express()
+        router = require(`${process.cwd()}/src/conditions/conditions.routes`)
+        masterRouter = express.Router()
+        router(masterRouter)
+   })
+
+   it('should get targetgroup document and call route only 1 times because of wrong spelling', async () => {
+        const spyMiddleware = sinon.spy(masterRouter)
+        app.use(spyMiddleware)
+
+        const server = http.createServer(app)
+        server.listen(1337)// , host)
+
+        const res = await axios.get('http://127.0.0.1:1337/v1/conditions')
+        expect(res.status).to.be.equal(200)
+        expect(spyMiddleware.callCount).to.eq(1)
+
+        const res2 = await axios.get('http://127.0.0.1:1337/v1/conditions')
+        expect(res2.status).to.be.equal(200)
+        expect(spyMiddleware.callCount).to.eq(2)
+
+        const res3 = await axios.get('http://127.0.0.1:1337/v1/Conditions')
+        expect(res3.status).to.be.equal(200)
+        expect(spyMiddleware.callCount).to.eq(3)
+   })
+})
+```
+
+
+
+
+- Variant #2
+```javascript
+const assert = require('assert');
+const sinon = require('sinon');
+const express = require('express');
+
+const app = express();
+
+// Die Middleware-Funktion, die getestet werden soll
+const middleware = (req, res, next) => {
+  // Mach etwas ...
+  next();
+};
+
+describe('Middleware Test', () => {
+  it('sollte einmal aufgerufen werden', () => {
+    const spyMiddleware = sinon.spy(middleware);
+    app.use(spyMiddleware);
+
+    // Führe eine Anfrage an die App aus
+    // Hier kannst du z.B. supertest verwenden, um eine HTTP-Anfrage zu simulieren
+    // Für dieses Beispiel nehmen wir an, dass die Middleware einmal aufgerufen wird
+    // Dies könnte z.B. bedeuten, dass der Endpunkt nur eine GET-Anfrage verarbeitet
+    app.get('/test', (req, res) => {
+      res.send('Test');
+    });
+
+    // Überprüfe, ob die Middleware genau einmal aufgerufen wurde
+    assert(spyMiddleware.calledOnce);
+  });
+
+  it('sollte zweimal aufgerufen werden', () => {
+    const spyMiddleware = sinon.spy(middleware);
+    app.use(spyMiddleware);
+
+    // Führe eine Anfrage an die App aus
+    // Hier kannst du z.B. supertest verwenden, um eine HTTP-Anfrage zu simulieren
+    // Für dieses Beispiel nehmen wir an, dass die Middleware zweimal aufgerufen wird
+    // Dies könnte z.B. bedeuten, dass der Endpunkt sowohl GET- als auch POST-Anfragen verarbeitet
+    app.get('/test', (req, res, next) => {
+      next();
+    });
+
+    app.post('/test', (req, res) => {
+      res.send('Test');
+    });
+
+    // Überprüfe, ob die Middleware genau zweimal aufgerufen wurde
+    assert(spyMiddleware.calledTwice);
+  });
+});
+
+```
