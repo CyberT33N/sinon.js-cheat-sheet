@@ -14,6 +14,20 @@ Sinon.js Cheat Sheet with the most needed stuff..
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <br><br>
 _________________________________
 _________________________________
@@ -42,6 +56,8 @@ const doc = Model.find()
 console.log(doc)
 ```
 
+
+
 <br><br>
 <br><br>
 
@@ -66,6 +82,89 @@ describe('storeMessages()', () => {
   });
 });
 ```
+
+
+<br><br>
+<br><br>
+
+
+## Mock method of class with args
+```javascript
+/**
+ * Represents a SlackBot.
+ */
+class SlackBot {
+    /**
+     * Constructs a new SlackBot instance. Singleton
+     */
+    constructor() {}
+
+    /**
+     * Sends a message to a channel.
+     * @param {string} channelId - The ID of the channel.
+     * @param {string} text - The text of the message.
+     */
+    async sendMessage(channelId, text) {
+        try {
+            const res = await this.app.client.chat.postMessage({
+                token: this.botToken,
+                channel: channelId,
+                text
+            })
+
+            return res
+        } catch (e) {
+            throw new BaseError('Error while sending message to Slack channel.', e)
+        }
+    }
+}
+
+```
+
+```javascript
+let sendMessageStub
+
+beforeEach(async() => {
+    const slackBot = new SlackBot()
+    sendMessageStub = sinon.stub(slackBot, 'sendMessage')
+})
+
+afterEach(() => {
+    sendMessageStub.restore()
+})
+```
+
+```javascript
+it('should send a message to a channel', async () => {
+    const channelId = 'channel-id'
+    const text = 'Hello, world!'
+
+    const expectedResponse = {
+        channel: channelId,
+        text: text,
+    }
+
+    sendMessageStub.withArgs(channelId, text).resolves(expectedResponse)
+
+    const res = await slackBot.sendMessage(channelId, text)
+    expect(res.channel).to.equal(channelId)
+    expect(res.text).to.equal(text)
+    expect(sendMessageStub.calledOnceWith(channelId, text)).to.be.true
+})
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
