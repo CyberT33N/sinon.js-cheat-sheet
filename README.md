@@ -27,16 +27,18 @@ Sinon.js Cheat Sheet with the most needed stuff..
 
 
 
+<br><br>
+<br><br>
+_________________________________
+_________________________________
+<br><br>
+<br><br>
 
-<br><br>
-_________________________________
-_________________________________
-<br><br>
 
 
 # Stub
 
-
+<br><br>
 
 ## Mongoose Models
 ```javascript
@@ -55,6 +57,8 @@ sinon.stub(Model, 'find').callsFake(find)
 const doc = Model.find()
 console.log(doc)
 ```
+
+
 
 
 
@@ -84,11 +88,98 @@ describe('storeMessages()', () => {
 ```
 
 
+
+
+
 <br><br>
 <br><br>
 
+## Class
 
-## Mock method of class with args
+<br><br>
+
+### Mock non singleton class instance method which is called inside of function
+```javascript
+comst kafkaHelper = new KafkaHelper()
+
+const checkTaskId = async (body, topic, headers) => {
+     await kafkaHelper.sendMessageAvro(body, topic, headers)
+}
+```
+
+<br><br>
+
+Here we mock method sendMessageAvro of the class KafkaHelper
+```javascript
+describe('[KafkaHelper send avro message]', () => {
+    let sendMessageAvroStub
+
+    const { KafkaHelper } = require('./KafkaHelper')
+
+    beforeEach(() => {
+        sendMessageAvroStub = sinon.stub(KafkaHelper.prototype, "sendMessageAvro").resolves({})
+    })
+
+    afterEach(() => {
+        sinon.restore()
+    })
+
+    it('should call sendMessageAvro method with correct arguments', async () => {
+        const { taskId } = doc_emailMailingWithTaskIdScheduled
+
+        const expectedBody = {
+            'test': true
+        }
+
+        const expectedHeaders = {
+            'test': projectId,
+        }
+
+        await checkTaskId(body, topic, headers)
+
+        sinon.assert.calledWith(sendMessageAvroStub, expectedBody, 'any topic', expectedHeaders)
+        expect(sendMessageAvroStub.calledOnce).to.be.true
+    })
+})
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<br><br>
+<br><br>
+
+### Mock method response of class with args
 ```javascript
 /**
  * Represents a SlackBot.
@@ -118,7 +209,6 @@ class SlackBot {
         }
     }
 }
-
 ```
 
 ```javascript
@@ -152,6 +242,78 @@ it('should send a message to a channel', async () => {
     expect(sendMessageStub.calledOnceWith(channelId, text)).to.be.true
 })
 ```
+
+<br><br>
+<br><br>
+
+
+### Throw error inclass instance method
+- In this case the instance is kafkaHelper and the method is connect
+```javascript
+const error = new Error('Connection failed')
+sinon.stub(kafkaHelper, 'connect').throws(error)
+```
+
+
+
+
+
+
+
+
+
+
+<br><br>
+<br><br>
+
+### Mock class instance property
+- In this case we mock this.producer of our class instance kafkaHelper
+```javascript
+describe('sendMessage', () => {
+    let producerMock
+
+    const msg = 'Test message'
+    const topic = 'test'
+
+    beforeEach(() => {
+        producerMock = {
+            connect: sinon.stub().resolves(),
+            send: sinon.stub().resolves()
+        }
+
+        kafkaHelper.producer = producerMock
+    })
+
+    it('should send message to topic', async () => {
+        await kafkaHelper.sendMessage(msg, topic)
+        expect(producerMock.send.calledOnce).to.be.true
+        expect(producerMock.send.firstCall.args[0]).to.deep.equal({
+            topic,
+            messages: [{ value: msg }]
+        })
+    })
+
+     it('should throw an error if sending message fails', async () => {
+          const error = new Error('Message sending failed')
+          sinon.stub(kafkaHelper, 'connect').resolves()
+          producerMock.send.rejects(error)
+
+          try {
+              await kafkaHelper.sendMessage(msg, topic)
+          } catch (e) {
+              expect(e).to.equal(error)
+          }
+      })
+})
+```
+
+
+
+
+
+
+
+
 
 
 
@@ -362,6 +524,60 @@ describe.only('[PUPPETEER] BrowserWrapper Tests', function () {
     })
 })
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+<br><br>
+<br><br>
+
+
+
+
+
+## Class
+
+<br><br>
+
+### Check if method was called
+- kafkaHelper is the instance of the class and connect is the method
+```javascript
+const connectSpy = sinon.spy(kafkaHelper, 'connect')
+await kafkaHelper.connect()
+expect(connectSpy.calledOnce).to.be.true
+
+afterEach(() => {
+    sinon.restore()
+})
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
