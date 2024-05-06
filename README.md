@@ -37,6 +37,7 @@ _________________________________
 
 
 # Stub
+- This will be used to intercept functions
 
 <br><br>
 
@@ -362,7 +363,7 @@ _________________________________
 
 
 # Spy (https://sinonjs.org/releases/latest/spies/)
-
+- This will be used to spy functions
 
 
 <br><br>
@@ -524,6 +525,87 @@ describe.only('[PUPPETEER] BrowserWrapper Tests', function () {
     })
 })
 ```
+
+
+
+
+
+
+
+
+<br><br>
+<br><br>
+
+## Dependencies
+
+<br><br>
+
+### Axios
+
+```javascript
+beforeEach(async () => {
+    axiosStub = sinon.spy(axios, doc_DatasourceIdWithoutHandlebarsFormularData.method.toLowerCase())
+})
+
+afterEach(async () => {
+    axiosStub.restore()
+})
+
+it.only('should execute datasource by id', async () => {
+    expect(axiosStub.calledOnce).to.be.false
+
+    const res = await executeDatasourceById(datasourceIdWithoutHandlebarsFormularData, params)
+    expect(res.status).to.equal(201)
+    expect(res.data).to.equal(nockResponseBody)
+
+    expect(axiosStub.calledOnce).to.be.true
+
+    // ==== URL ====
+    expect(axiosStub.firstCall.args[0]).to.be.equal(doc_DatasourceIdWithoutHandlebarsFormularData.url)
+
+    // ==== PAYLOAD ====
+    const urlSearchParams = urlSearchParamsToObject(axiosStub.firstCall.args[1])
+
+    expect(urlSearchParams).to.be.deep.equal(doc_DatasourceIdWithoutHandlebarsFormularData.data)
+
+    // ==== HEADERS ====
+    expect(doc_DatasourceIdWithoutHandlebarsFormularData.headers['Content-Type']).to.be.equal(mimetype)
+    expect(axiosStub.firstCall.args[2].headers['Content-Type']).to.be.equal(mimetype)
+
+    expect(axiosStub.firstCall.args[2].httpsAgent).to.be.an.instanceof(HttpsProxyAgent)
+    expect(axiosStub.firstCall.args[2].httpAgent).to.be.an.instanceof(HttpProxyAgent)
+
+    expect(res.data.additional?.handlebarsError).to.not.exists
+})
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
