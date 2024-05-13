@@ -37,7 +37,7 @@ _________________________________
 
 
 # Stub
-- This will be used to intercept functions
+- This will be used to intercept functions and to return custom response
 
 <br><br>
 
@@ -69,9 +69,20 @@ console.log(doc)
 
 ## Dependencies
 
+
 <br><br>
 
-#### request
+### External functions
+```javascript
+innerFunctionStub = sinon.stub(nodemailer, 'createTransport').returns({
+     sendMail: sinon.stub().resolves(emailResponseStub) // Stubbing sendMail method
+});
+
+```
+
+<br><br>
+
+### request
 ```javascript
 describe('storeMessages()', () => {
   before(()=>{
@@ -87,6 +98,15 @@ describe('storeMessages()', () => {
   });
 });
 ```
+
+
+
+
+
+
+
+
+
 
 
 
