@@ -131,6 +131,7 @@ const checkTaskId = async (body, topic, headers) => {
 <br><br>
 
 Here we mock method sendMessageAvro of the class KafkaHelper
+- **We must use .prototype for classes**
 ```javascript
 describe('[KafkaHelper send avro message]', () => {
     let sendMessageAvroStub
