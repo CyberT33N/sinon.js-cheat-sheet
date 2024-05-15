@@ -415,7 +415,17 @@ it('should throw error because app is missing', async () => {
 
 <br><br>
 
-## Using a spy to wrap an existing method
+## Class
+
+<br><br>
+
+### Full class 
+```javascript
+const stub = sinon.spy(BrowserService.prototype)
+```
+<br><br>
+
+### Using a spy to wrap an existing method
 ```javascript
 /*---- Example #1 ----*/
 // BrowserWrapper.js
@@ -554,6 +564,8 @@ describe.only('[PUPPETEER] BrowserWrapper Tests', function () {
 
 
 
+<br><br>
+<br><br>
 <br><br>
 <br><br>
 
