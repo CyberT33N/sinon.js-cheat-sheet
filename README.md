@@ -415,6 +415,29 @@ it('should throw error because app is missing', async () => {
 
 <br><br>
 
+## Reset spy history
+```javascript
+before(async () => {
+    browserServiceSpy = sinon.spy(BrowserService.prototype)
+    kafkaKontrollerSpy = sinon.spy(KafkaKontroller.prototype)
+})
+
+after(async () => {
+    browserServiceSpy.getThumbnailUrlFromHtml.restore()
+    kafkaKontrollerSpy.sendAvro.restore()
+})
+
+afterEach(() => {
+    browserServiceSpy.getThumbnailUrlFromHtml.resetHistory()
+    kafkaKontrollerSpy.sendAvro.resetHistory()
+})
+```
+
+
+
+
+<br><br>
+
 ## Class
 
 <br><br>
