@@ -424,6 +424,7 @@ it('should throw error because app is missing', async () => {
 const spy = sinon.spy(BrowserService.prototype)
 ```
 - You can not use`spy.restore()` here on the class itself. You must restore the method e.g. `spy.methodName.restore()`
+- This also means you can only 1x time create a spy on a class itself. When you restore the method stub then the class still is be spyed. So you can create a spy in your before() or youc reate it inside of a sandbox and then remove it
 
 <br><br>
 
