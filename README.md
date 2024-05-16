@@ -421,9 +421,9 @@ it('should throw error because app is missing', async () => {
 
 ### Full class 
 ```javascript
-const stub = sinon.spy(BrowserService.prototype)
+const spy = sinon.spy(BrowserService.prototype)
 ```
-- You can not use stub.restore() here
+- You can not use`spy.restore()` here on the class itself. You must restore the method e.g. `spy.methodName.restore()`
 
 <br><br>
 
