@@ -423,6 +423,8 @@ it('should throw error because app is missing', async () => {
 ```javascript
 const stub = sinon.spy(BrowserService.prototype)
 ```
+- You can not use stub.restore() here
+
 <br><br>
 
 ### Using a spy to wrap an existing method
