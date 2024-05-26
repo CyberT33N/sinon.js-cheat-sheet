@@ -623,9 +623,63 @@ describe.only('[PUPPETEER] BrowserWrapper Tests', function () {
 
 ### Axios
 
+<br><br>
+
+#### Method #1 - If you use axios(config)
+```javascript
+import axios from 'axios'
+
+describe('[SUCCESS]', () => {
+        let axiosStub: sinon.SinonStub
+
+        const { WALLET_ETH_ADDRESS } = process.env
+
+        const requestObj = {
+            nextUrl: {
+                searchParams: new URLSearchParams({ address: WALLET_ETH_ADDRESS })
+            }
+        } as NextRequest
+
+        const responseBody = {
+            status: 200,
+            data: { test: true }
+        }
+
+        beforeEach(() => {
+            axiosStub = sinon.stub(axios, 'request').resolves(responseBody)
+        })
+        
+        afterEach(() => {
+            sinon.restore()
+        })
+        
+        test('should get current balance of eth address in USD', async() => {
+            expect(axiosStub.calledOnce).toBe(false)
+
+            const response = await GET(requestObj) as NextResponse & { data: object }
+            const responseData = await response.json()
+            expect(response.status).toBe(200)
+            expect(responseData.balance).toEqual(responseBody.data)
+
+            // ==== AXIOS MOCKS ====
+            expect(axiosStub.calledOnce).toBe(true)
+            expect(axiosStub.firstCall.args[0]).toEqual({
+                url: `${process.env.COINMARKETCAP_API_COIN_LISTINGS_URL}?symbol=ETH&convert=USD`,
+                method: 'GET',
+                headers: {
+                    'X-CMC_PRO_API_KEY': process.env.API_KEY_COINMARKETCAP
+                }
+            })
+        })
+    })
+```
+
+<br><br>
+
+#### Method #2 - If you use axios[method]
 ```javascript
 beforeEach(async () => {
-    axiosStub = sinon.spy(axios, doc_DatasourceIdWithoutHandlebarsFormularData.method.toLowerCase())
+    axiosStub = sinon.spy(axios, 'get')
 })
 
 afterEach(async () => {
