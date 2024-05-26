@@ -22,6 +22,28 @@ Sinon.js Cheat Sheet with the most needed stuff..
 
 
 
+<br><br>
+<br><br>
+_________________________________
+_________________________________
+<br><br>
+<br><br>
+
+# Typescript
+```shell
+npm i -D npm i --save-dev @types/sinon
+```
+
+```javascript
+import sinon from 'sinon'
+let axiosStub: sinon.SinonStub
+```
+
+
+
+
+
+
 
 
 
