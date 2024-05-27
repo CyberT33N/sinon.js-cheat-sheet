@@ -75,6 +75,9 @@ expect(axiosRequestStub.calledOnceWithExactly(config)).toBe(true)
 
 
 
+
+
+
 <br><br>
 <br><br>
 _________________________________
@@ -87,6 +90,48 @@ _________________________________
 # Stub
 - This will be used to intercept functions and to return custom response
 
+<br><br>
+<br><br>
+
+## Error
+```javascript
+describe('[ERROR]', () => {
+        let axiosRequestStub: sinon.SinonStub
+
+        const error = new Error('Request failed')
+
+        beforeEach(() => {
+            axiosRequestStub = sinon.stub(axios, 'request').rejects(error)
+        })
+
+        afterEach(() => {
+            axiosRequestStub.restore()
+        })
+          
+        it.only('should throw an HttpClientError when the request fails and custom Error title', async() => {
+            axiosRequestStub.rejects(error)
+
+            const config = {
+                url: 'https://example.com',
+                method: 'GET',
+                errorMessage: 'Any crazy error..'
+            } as RequestParams
+
+            try {
+                await axiosRequestWrapper(config)
+                expect('Should not reach this line').toBe(false)
+            } catch (e: any) {
+                expect(e.message).toBe('Any crazy error..')
+                expect(e.originalError).toBe(error)
+                expect(e.name).toBe('HttpClientError')
+            }
+        })
+    })
+```
+
+
+
+<br><br>
 <br><br>
 
 ## Mongoose Models
