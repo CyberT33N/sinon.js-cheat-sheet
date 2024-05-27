@@ -679,36 +679,36 @@ describe('[SUCCESS]', () => {
 #### Method #2 - If you use axios[method]
 ```javascript
 beforeEach(async () => {
-    axiosStub = sinon.spy(axios, 'get')
+    axiosSpy = sinon.spy(axios, 'get')
 })
 
 afterEach(async () => {
-    axiosStub.restore()
+    axiosSpy.restore()
 })
 
 it.only('should execute datasource by id', async () => {
-    expect(axiosStub.calledOnce).to.be.false
+    expect(axiosSpy.calledOnce).to.be.false
 
     const res = await executeDatasourceById(datasourceIdWithoutHandlebarsFormularData, params)
     expect(res.status).to.equal(201)
     expect(res.data).to.equal(nockResponseBody)
 
-    expect(axiosStub.calledOnce).to.be.true
+    expect(axiosSpy.calledOnce).to.be.true
 
     // ==== URL ====
-    expect(axiosStub.firstCall.args[0]).to.be.equal(doc_DatasourceIdWithoutHandlebarsFormularData.url)
+    expect(axiosSpy.firstCall.args[0]).to.be.equal(doc_DatasourceIdWithoutHandlebarsFormularData.url)
 
     // ==== PAYLOAD ====
-    const urlSearchParams = urlSearchParamsToObject(axiosStub.firstCall.args[1])
+    const urlSearchParams = urlSearchParamsToObject(axiosSpy.firstCall.args[1])
 
     expect(urlSearchParams).to.be.deep.equal(doc_DatasourceIdWithoutHandlebarsFormularData.data)
 
     // ==== HEADERS ====
     expect(doc_DatasourceIdWithoutHandlebarsFormularData.headers['Content-Type']).to.be.equal(mimetype)
-    expect(axiosStub.firstCall.args[2].headers['Content-Type']).to.be.equal(mimetype)
+    expect(axiosSpy.firstCall.args[2].headers['Content-Type']).to.be.equal(mimetype)
 
-    expect(axiosStub.firstCall.args[2].httpsAgent).to.be.an.instanceof(HttpsProxyAgent)
-    expect(axiosStub.firstCall.args[2].httpAgent).to.be.an.instanceof(HttpProxyAgent)
+    expect(axiosSpy.firstCall.args[2].httpsAgent).to.be.an.instanceof(HttpsProxyAgent)
+    expect(axiosSpy.firstCall.args[2].httpAgent).to.be.an.instanceof(HttpProxyAgent)
 
     expect(res.data.additional?.handlebarsError).to.not.exists
 })
