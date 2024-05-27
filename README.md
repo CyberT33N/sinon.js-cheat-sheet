@@ -57,6 +57,32 @@ _________________________________
 <br><br>
 
 
+# Methods
+
+<br><br>
+<br><br>
+
+
+## calledOnceWithExactly
+```javascript
+expect(axiosRequestStub.calledOnceWithExactly(config)).toBe(true)
+```
+
+
+
+
+
+
+
+
+<br><br>
+<br><br>
+_________________________________
+_________________________________
+<br><br>
+<br><br>
+
+
 
 # Stub
 - This will be used to intercept functions and to return custom response
