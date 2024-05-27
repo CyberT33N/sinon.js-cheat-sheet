@@ -625,7 +625,7 @@ describe.only('[PUPPETEER] BrowserWrapper Tests', function () {
 
 <br><br>
 
-#### Method #1 - If you use axios(config)
+#### Method #1 - If you use axios.request(config)
 ```javascript
 import axios from 'axios'
 
