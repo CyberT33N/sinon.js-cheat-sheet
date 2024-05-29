@@ -65,9 +65,13 @@ _________________________________
 
 ## calledOnceWithExactly
 ```javascript
-expect(axiosRequestStub.calledOnceWithExactly(config)).toBe(true)
+expect(axiosRequestStub.calledOnceWithExactly({ test: true )).toBe(true)
 ```
 
+## calledOnceWith
+```javascript
+expect(getCurrentPriceStub.calledOnceWith('ETH', 'USD')).toBe(true)
+```
 
 
 
