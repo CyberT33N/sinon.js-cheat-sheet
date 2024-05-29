@@ -58,6 +58,7 @@ _________________________________
 
 
 # Methods
+- https://sinonjs.org/releases/latest/spies/
 
 <br><br>
 <br><br>
@@ -67,6 +68,8 @@ _________________________________
 ```javascript
 expect(axiosRequestStub.calledOnceWithExactly({ test: true )).toBe(true)
 ```
+
+<br><br>
 
 ## calledOnceWith
 ```javascript
