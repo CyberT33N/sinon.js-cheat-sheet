@@ -85,6 +85,8 @@ expect(getCurrentPriceStub.calledOnceWith('ETH', 'USD')).toBe(true)
 
 
 
+
+
 <br><br>
 <br><br>
 _________________________________
@@ -96,6 +98,25 @@ _________________________________
 
 # Stub
 - This will be used to intercept functions and to return custom response
+
+<br><br>
+<br><br>
+
+## Single exported function
+- As far as I read it is not working out of the box with sinon.js
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 <br><br>
 <br><br>
