@@ -287,7 +287,11 @@ describe('[KafkaHelper send avro message]', () => {
 ```
 
 
-
+Other example:
+```typescript
+ getBalanceStub = sinon.stub(BalanceManager.prototype, 'getBalance').callsFake(() => {
+                return Promise.resolve(balanceWei)
+```
 
 
 
