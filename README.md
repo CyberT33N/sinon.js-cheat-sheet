@@ -49,6 +49,8 @@ let axiosStub: sinon.SinonStub
 
 
 
+
+
 <br><br>
 <br><br>
 _________________________________
@@ -59,6 +61,7 @@ _________________________________
 
 # Methods
 - https://sinonjs.org/releases/latest/spies/
+- Should work with spies and stubs
 
 <br><br>
 <br><br>
@@ -76,7 +79,30 @@ expect(axiosRequestStub.calledOnceWithExactly({ test: true )).toBe(true)
 expect(getCurrentPriceStub.calledOnceWith('ETH', 'USD')).toBe(true)
 ```
 
+<br><br>
 
+## callCount
+```javascript
+expect(calculateWeiToUsdSpy.callCount).toBe(4)
+```
+
+<br><br>
+
+## getCalls
+```javascript
+const calls = calculateWeiToUsdSpy.getCalls()
+
+expect(calls[0].args).toEqual([
+BigInt(expectedTransactions.result[0].value),
+currencyExchangeHistoryResponse.market_data.current_price.usd
+])
+
+expect(calls[1].args).toEqual([
+// eslint-disable-next-line max-len
+BigInt(expectedTransactions.result[0].gasPrice) * BigInt(expectedTransactions.result[0].gasUsed),
+currencyExchangeHistoryResponse.market_data.current_price.usd
+])
+```
 
 
 
