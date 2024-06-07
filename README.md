@@ -502,11 +502,17 @@ describe('sendMessage', () => {
 
 
 
-<br><br>
-_________________________________
-_________________________________
-<br><br>
 
+
+
+
+
+<br><br>
+<br><br>
+_________________________________
+_________________________________
+<br><br>
+<br><br>
 
 # Spy (https://sinonjs.org/releases/latest/spies/)
 - This will be used to spy functions
@@ -538,6 +544,7 @@ it('should throw error because app is missing', async () => {
 })
 ```
 
+<br><br
 <br><br>
 
 ## Reset spy history
@@ -561,7 +568,52 @@ afterEach(() => {
 
 
 
+
+
+
+
+
+
 <br><br>
+<br><br>
+
+
+# Javascript Functions
+```typescript
+it('should make a successful request and use timeout', async() => {
+        const config = {
+            url: 'https://example.com',
+            method: 'GET',
+            timeout: 1000
+        } as RequestParams
+        
+        const result = await axiosRequestWrapper(config)
+        
+        expect(result).toEqual(responseBody)
+        expect(axiosRequestStub.calledOnceWithExactly(_.omit(config, 'timeout'))).toBe(true)
+        
+        expect(setTimeoutSpy.called).toBe(true)
+})
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<br><br>
+<br><br>
+
 
 ## Class
 
