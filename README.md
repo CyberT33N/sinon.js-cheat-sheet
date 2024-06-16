@@ -51,6 +51,11 @@ let axiosStub: sinon.SinonStub
 
 
 
+
+
+
+
+
 <br><br>
 <br><br>
 _________________________________
@@ -113,6 +118,24 @@ currencyExchangeHistoryResponse.market_data.current_price.usd
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <br><br>
 <br><br>
 _________________________________
@@ -150,37 +173,37 @@ _________________________________
 ## Error
 ```javascript
 describe('[ERROR]', () => {
-        let axiosRequestStub: sinon.SinonStub
+let axiosRequestStub: sinon.SinonStub
 
-        const error = new Error('Request failed')
+const error = new Error('Request failed')
 
-        beforeEach(() => {
-            axiosRequestStub = sinon.stub(axios, 'request').rejects(error)
-        })
+beforeEach(() => {
+    axiosRequestStub = sinon.stub(axios, 'request').rejects(error)
+})
 
-        afterEach(() => {
-            axiosRequestStub.restore()
-        })
-          
-        it.only('should throw an HttpClientError when the request fails and custom Error title', async() => {
-            axiosRequestStub.rejects(error)
+afterEach(() => {
+    axiosRequestStub.restore()
+})
+  
+it.only('should throw an HttpClientError when the request fails and custom Error title', async() => {
+    axiosRequestStub.rejects(error)
 
-            const config = {
-                url: 'https://example.com',
-                method: 'GET',
-                errorMessage: 'Any crazy error..'
-            } as RequestParams
+    const config = {
+        url: 'https://example.com',
+        method: 'GET',
+        errorMessage: 'Any crazy error..'
+    } as RequestParams
 
-            try {
-                await axiosRequestWrapper(config)
-                expect('Should not reach this line').toBe(false)
-            } catch (e: any) {
-                expect(e.message).toBe('Any crazy error..')
-                expect(e.originalError).toBe(error)
-                expect(e.name).toBe('HttpClientError')
-            }
-        })
-    })
+    try {
+        await axiosRequestWrapper(config)
+        expect('Should not reach this line').toBe(false)
+    } catch (e: any) {
+        expect(e.message).toBe('Any crazy error..')
+        expect(e.originalError).toBe(error)
+        expect(e.name).toBe('HttpClientError')
+    }
+})
+})
 ```
 
 
@@ -245,6 +268,7 @@ describe('storeMessages()', () => {
   });
 });
 ```
+
 
 
 
@@ -479,6 +503,47 @@ describe('sendMessage', () => {
       })
 })
 ```
+
+
+
+<br><br>
+<br><br>
+
+
+### Stub private methods
+
+```javascript
+describe('getConnection', () => {
+        let initSpy: sinon.SinonSpy
+
+        beforeEach(() => {
+            initSpy = sinon.spy((<any>MongooseUtils).prototype, 'init')
+        })
+
+        afterEach(() => {
+            initSpy.restore()
+        })
+
+        it('should return a valid existing mongoose connection', async() => {
+            const conn = await (<any>mongooseUtils).getConnection()
+            expect(initSpy.calledOnce).toBe(false)
+            expect(conn).toBeTruthy()
+            expect(conn).toBeInstanceOf(mongoose.Connection)
+        })
+
+        it('should return a valid mongoose connection by creating one', async() => {
+            delete (<any>mongooseUtils).conn
+
+            const conn = await (<any>mongooseUtils).getConnection()
+            expect(initSpy.calledOnce).toBe(true)
+            expect(conn).toBeTruthy()
+            expect(conn).toBeInstanceOf(mongoose.Connection)
+        })
+})
+```
+
+
+
 
 
 
