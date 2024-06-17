@@ -506,43 +506,6 @@ describe('sendMessage', () => {
 
 
 
-<br><br>
-<br><br>
-
-
-### Stub private methods
-
-```javascript
-describe('getConnection', () => {
-        let initSpy: sinon.SinonSpy
-
-        beforeEach(() => {
-            initSpy = sinon.spy((<any>MongooseUtils).prototype, 'init')
-        })
-
-        afterEach(() => {
-            initSpy.restore()
-        })
-
-        it('should return a valid existing mongoose connection', async() => {
-            const conn = await (<any>mongooseUtils).getConnection()
-            expect(initSpy.calledOnce).toBe(false)
-            expect(conn).toBeTruthy()
-            expect(conn).toBeInstanceOf(mongoose.Connection)
-        })
-
-        it('should return a valid mongoose connection by creating one', async() => {
-            delete (<any>mongooseUtils).conn
-
-            const conn = await (<any>mongooseUtils).getConnection()
-            expect(initSpy.calledOnce).toBe(true)
-            expect(conn).toBeTruthy()
-            expect(conn).toBeInstanceOf(mongoose.Connection)
-        })
-})
-```
-
-
 
 
 
@@ -860,6 +823,74 @@ describe.only('[PUPPETEER] BrowserWrapper Tests', function () {
 
 <br><br>
 <br><br>
+
+
+## Stub private methods
+
+### Example #1
+```javascript
+describe('getConnection', () => {
+        let initSpy: sinon.SinonSpy
+
+        beforeEach(() => {
+            initSpy = sinon.spy((<any>MongooseUtils).prototype, 'init')
+        })
+
+        afterEach(() => {
+            initSpy.restore()
+        })
+
+        it('should return a valid existing mongoose connection', async() => {
+            const conn = await (<any>mongooseUtils).getConnection()
+            expect(initSpy.calledOnce).toBe(false)
+            expect(conn).toBeTruthy()
+            expect(conn).toBeInstanceOf(mongoose.Connection)
+        })
+
+        it('should return a valid mongoose connection by creating one', async() => {
+            delete (<any>mongooseUtils).conn
+
+            const conn = await (<any>mongooseUtils).getConnection()
+            expect(initSpy.calledOnce).toBe(true)
+            expect(conn).toBeTruthy()
+            expect(conn).toBeInstanceOf(mongoose.Connection)
+        })
+})
+```
+
+### Example #2
+- Get Prototype
+- Notice that you will create a new object here which does not include properties from your created instance
+```typescript
+ beforeEach(() => {
+        const example = new Example();
+        const exampleProto = Object.getPrototypeOf(example);
+        initSpy = sinon.spy(exampleProto, 'init')
+  })
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<br><br>
+<br><br>
+--  --  --  --  --  --  --  --  --  --  --  --  
 <br><br>
 <br><br>
 
