@@ -136,6 +136,7 @@ currencyExchangeHistoryResponse.market_data.current_price.usd
 
 
 
+
 <br><br>
 <br><br>
 _________________________________
@@ -290,7 +291,25 @@ describe('storeMessages()', () => {
 
 <br><br>
 
-### Mock non singleton class instance method which is called inside of function
+### Stub class instance property
+```javascript
+describe('init()', function() {
+    let connStub: sinon.SinonStub
+
+    beforeEach(() => {
+        connStub = sinon.stub(<any>mongooseUtils, 'conn').value(undefined)
+    })
+
+    afterEach(async() => {
+        connStub.restore()
+    })
+})
+```
+
+
+<br><br>
+
+### Stub non singleton class instance method which is called inside of function
 ```javascript
 comst kafkaHelper = new KafkaHelper()
 
