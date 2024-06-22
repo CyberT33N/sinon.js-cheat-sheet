@@ -137,6 +137,8 @@ currencyExchangeHistoryResponse.market_data.current_price.usd
 
 
 
+
+
 <br><br>
 <br><br>
 _________________________________
@@ -148,7 +150,9 @@ _________________________________
 
 # Stub
 - This will be used to intercept functions and to return custom response
-
+  
+<details><summary>Click to expand..</summary>
+    
 <br><br>
 <br><br>
 
@@ -209,6 +213,12 @@ it.only('should throw an HttpClientError when the request fails and custom Error
 
 
 
+
+
+
+
+
+
 <br><br>
 <br><br>
 
@@ -229,6 +239,17 @@ sinon.stub(Model, 'find').callsFake(find)
 const doc = Model.find()
 console.log(doc)
 ```
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -284,10 +305,31 @@ describe('storeMessages()', () => {
 
 
 
+
+
 <br><br>
 <br><br>
 
 ## Class
+
+<br><br>
+
+### Stub internal method call of instance method
+- resolves will not work here and result in a fullfilled promise. Use instead returns()
+```javascript
+public async getTokenDetails(tokenAddress: string, ABI: any) {
+    const tokenContract = this.createContract(ABI, tokenAddress)
+}
+```
+
+```javascript
+let createContractStub: sinon.SinonStub
+beforeEach(() => {
+    createContractStub = sinon.stub(ethCoinManager.contract, 'createContract').returns({
+        test: true
+    })
+})
+```
 
 <br><br>
 
@@ -522,7 +564,7 @@ describe('sendMessage', () => {
       })
 })
 ```
-
+</details>
 
 
 
@@ -590,6 +632,7 @@ _________________________________
 # Spy (https://sinonjs.org/releases/latest/spies/)
 - This will be used to spy functions
 
+<details><summary>Click to expand..</summary>
 
 <br><br>
 
@@ -844,7 +887,7 @@ describe.only('[PUPPETEER] BrowserWrapper Tests', function () {
 <br><br>
 
 
-## Stub private methods
+## Spy private methods
 
 ### Example #1
 ```javascript
@@ -887,16 +930,6 @@ describe('getConnection', () => {
         initSpy = sinon.spy(exampleProto, 'init')
   })
 ```
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1222,5 +1255,20 @@ describe('Middleware Test', () => {
     assert(spyMiddleware.calledTwice);
   });
 });
-
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+</details
+
+
+
