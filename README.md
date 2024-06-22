@@ -160,6 +160,33 @@ _________________________________
 - As far as I read it is not working out of the box with sinon.js
 
 
+<br><br>
+<br><br>
+
+## Stub chained function calls
+```javascript
+const [name, symbol, decimals, totalSupply] = await Promise.all([
+    tokenContract.methods.name().call(),
+    tokenContract.methods.symbol().call(),
+    tokenContract.methods.decimals().call(),
+    tokenContract.methods.totalSupply().call()
+])
+```
+
+```javascript
+beforeEach(() => {
+    createContractStub = sinon.stub(ethCoinManager.contract, 'createContract').returns({
+        methods: {
+            name: () => ({ call: sinon.stub().resolves(mockTokenDetails.name) }),
+            symbol: () => ({ call: sinon.stub().resolves(mockTokenDetails.symbol) }),
+            decimals: () => ({ call: sinon.stub().resolves(mockTokenDetails.decimals) }),
+            totalSupply: () => ({ call: sinon.stub().resolves(mockTokenDetails.totalSupply) })
+        }
+    } as any)
+})
+```
+
+
 
 
 
