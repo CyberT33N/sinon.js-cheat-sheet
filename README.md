@@ -67,7 +67,9 @@ _________________________________
 # Methods
 - https://sinonjs.org/releases/latest/spies/
 - Should work with spies and stubs
-
+ 
+<details><summary>Click to expand..</summary>
+    
 <br><br>
 <br><br>
 
@@ -133,7 +135,7 @@ getTokenDetailsStub.withArgs(token1, ERC20_ABI_TOKEN_DETAILS).resolves(token1Det
 getTokenDetailsStub.withArgs(pair, ERC20_ABI_TOKEN_DETAILS).resolves(pairDetails)  
 ```
 
-
+</details>
 
 
 
@@ -172,20 +174,33 @@ _________________________________
 
 # Stub
 - This will be used to intercept functions and to return custom response
-  
+```javascript
+innerFunctionStub = sinon.stub(nodemailer, 'createTransport').returns({
+     sendMail: sinon.stub().resolves(emailResponseStub) // Stubbing sendMail method
+});
+```
+
 <details><summary>Click to expand..</summary>
+
+
+
     
 <br><br>
 <br><br>
 
-## Single exported function
+## Function
+
+<br><br>
+<br><br>
+
+### Single exported function
 - As far as I read it is not working out of the box with sinon.js
 
 
 <br><br>
 <br><br>
 
-## Stub chained function calls
+### Stub chained function calls
 ```javascript
 const [name, symbol, decimals, totalSupply] = await Promise.all([
     tokenContract.methods.name().call(),
@@ -214,7 +229,7 @@ beforeEach(() => {
 <br><br>
 <br><br>
 
-## Stub function call with different args
+### Stub function call with different args
 ```javascript
 const token0Details = await this.getTokenDetails(token0, ERC20_ABI_TOKEN_DETAILS)
 ```
@@ -247,6 +262,87 @@ it('should listen for new pair events and save them to the database', async() =>
 
 
 
+<br><br>
+<br><br>
+-- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+-- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+<br><br>
+<br><br>
+
+# Events
+
+<br><br>
+<br><br>
+
+## Example #1
+- You have access to the callback function because it is not directly hardcoded to the event instead schon outsourced it somewhere
+```javascript
+private getNewPairsEventHandler() {
+  return async(event: pairEvent) => {
+      // ..
+  }
+}
+
+public async getNewPairs() {
+      const newPairsEvent = await this.uniswapPairCreatedFactory.events.PairCreated()
+
+      newPairsEvent.on('data', this.getNewPairsEventHandler())
+
+      newPairsEvent.on('error', (e: Error) => {
+          throw new BaseError('Error fetching new pairs', e)
+      })
+}
+```
+```javascript
+beforeEach(() => {
+    const eventHandlerFn = (<any>ethCoinManager.contract).getNewPairsEventHandler()
+
+    uniswapPairCreatedFactoryStub = sinon.stub(
+        ethCoinManager.contract.uniswapPairCreatedFactory, 'events'
+    ).returns({
+        PairCreated: sinon.stub().returns(eventHandlerFn)
+    })
+})
+
+afterEach(() => {
+    uniswapPairCreatedFactoryStub.restore()
+})
+
+it('should listen for new pair events and save them to the database', async() => {
+    await ethCoinManager.contract.getNewPairs()
+
+    const eventHandler = uniswapPairCreatedFactoryStub().PairCreated()
+    
+    const event = {
+        returnValues: { token0, token1, pair }
+    }
+
+    await eventHandler(event)
+
+    expect(getTokenDetailsStub.calledWith(token0, ERC20_ABI_TOKEN_DETAILS)).toBe(true)
+    expect(getTokenDetailsStub.calledWith(token1, ERC20_ABI_TOKEN_DETAILS)).toBe(true)
+    expect(getTokenDetailsStub.calledWith(pair, ERC20_ABI_TOKEN_DETAILS)).toBe(true)
+})
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<br><br>
+<br><br>
+-- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+-- -- -- -- -- -- -- -- -- -- -- -- -- -- 
 <br><br>
 <br><br>
 
@@ -294,10 +390,58 @@ it.only('should throw an HttpClientError when the request fails and custom Error
 
 
 
+
+
+
+
+
+
+
+<br><br>
+<br><br>
+-- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+-- -- -- -- -- -- -- -- -- -- -- -- -- -- 
 <br><br>
 <br><br>
 
-## Mongoose Models
+## Dependencies
+
+<br><br>
+<br><br>
+
+### request
+```javascript
+describe('storeMessages()', () => {
+  before(()=>{
+    sinon.stub(request, 'get')
+         .yields(null, null, JSON.stringify({id: 1}))
+  });
+
+  it('Should return id', done => {
+    request(options, (e, r) => {
+      expect(r).toStrictEqual({id: 1});
+      done()
+    });
+  });
+});
+```
+
+
+
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+
+
+
+
+
+### Mongoose
+
+<br><br>
+
+#### Models
 ```javascript
 const sinon = require('sinon')
 const mongoose = require('mongoose')
@@ -330,49 +474,6 @@ console.log(doc)
 
 
 
-<br><br>
-<br><br>
-
-
-## Dependencies
-
-
-<br><br>
-
-### External functions
-```javascript
-innerFunctionStub = sinon.stub(nodemailer, 'createTransport').returns({
-     sendMail: sinon.stub().resolves(emailResponseStub) // Stubbing sendMail method
-});
-
-```
-
-<br><br>
-
-### request
-```javascript
-describe('storeMessages()', () => {
-  before(()=>{
-    sinon.stub(request, 'get')
-         .yields(null, null, JSON.stringify({id: 1}))
-  });
-
-  it('Should return id', done => {
-    request(options, (e, r) => {
-      expect(r).toStrictEqual({id: 1});
-      done()
-    });
-  });
-});
-```
-
-
-
-
-
-
-
-
 
 
 
@@ -384,9 +485,13 @@ describe('storeMessages()', () => {
 
 <br><br>
 <br><br>
+-- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+-- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+<br><br>
+<br><br>
+
 
 ## Class
-
 
 
 
