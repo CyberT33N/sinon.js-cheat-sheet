@@ -31,7 +31,7 @@ _________________________________
 
 # Typescript
 ```shell
-npm i -D npm i --save-dev @types/sinon
+npm i -D @types/sinon sinon
 ```
 
 ```javascript
