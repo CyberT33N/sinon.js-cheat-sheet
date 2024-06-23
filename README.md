@@ -72,6 +72,18 @@ _________________________________
 <br><br>
 
 
+## calledWith
+```javascript
+expect(getTokenDetailsStub.calledWith(token0, ERC20_ABI_TOKEN_DETAILS)).toBe(true)
+expect(getTokenDetailsStub.calledWith(token1, ERC20_ABI_TOKEN_DETAILS)).toBe(true)
+expect(getTokenDetailsStub.calledWith(pair, ERC20_ABI_TOKEN_DETAILS)).toBe(true)
+```
+
+
+<br><br>
+<br><br>
+
+
 ## calledOnceWithExactly
 ```javascript
 expect(axiosRequestStub.calledOnceWithExactly({ test: true )).toBe(true)
@@ -110,6 +122,16 @@ currencyExchangeHistoryResponse.market_data.current_price.usd
 ```
 
 
+
+<br><br>
+
+## withArgs
+```javascript
+getTokenDetailsStub = sinon.stub(ethCoinManager.contract, 'getTokenDetails')
+getTokenDetailsStub.withArgs(token0, ERC20_ABI_TOKEN_DETAILS).resolves(token0Details)
+getTokenDetailsStub.withArgs(token1, ERC20_ABI_TOKEN_DETAILS).resolves(token1Details)
+getTokenDetailsStub.withArgs(pair, ERC20_ABI_TOKEN_DETAILS).resolves(pairDetails)  
+```
 
 
 
