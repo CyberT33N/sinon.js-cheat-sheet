@@ -189,6 +189,32 @@ beforeEach(() => {
 
 
 
+<br><br>
+<br><br>
+
+## Stub function call with different args
+```javascript
+const token0Details = await this.getTokenDetails(token0, ERC20_ABI_TOKEN_DETAILS)
+```
+
+```javascript
+beforeEach(() => {
+    getTokenDetailsStub = sinon.stub(ethCoinManager.contract, 'getTokenDetails')
+
+    getTokenDetailsStub.withArgs(token0, ERC20_ABI_TOKEN_DETAILS).resolves(token0Details)
+    getTokenDetailsStub.withArgs(token1, ERC20_ABI_TOKEN_DETAILS).resolves(token1Details)
+    getTokenDetailsStub.withArgs(pair, ERC20_ABI_TOKEN_DETAILS).resolves(pairDetails)    
+})
+
+it('should listen for new pair events and save them to the database', async() => {
+    expect(getTokenDetailsStub.calledWith(token0, ERC20_ABI_TOKEN_DETAILS)).toBe(true)
+    expect(getTokenDetailsStub.calledWith(token1, ERC20_ABI_TOKEN_DETAILS)).toBe(true)
+    expect(getTokenDetailsStub.calledWith(pair, ERC20_ABI_TOKEN_DETAILS)).toBe(true)
+})
+```
+
+
+
 
 
 
