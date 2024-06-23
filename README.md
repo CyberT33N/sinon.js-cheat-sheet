@@ -339,6 +339,38 @@ describe('storeMessages()', () => {
 
 ## Class
 
+
+
+
+<br><br>
+<br><br>
+
+### Stub privat method
+```javascript
+
+describe('getInstance()', () => {
+    let initStub: sinon.SinonStub
+
+    beforeEach(() => {
+        initStub = sinon.stub((<any>ModelManager).prototype, 'init').resolves()
+    })
+
+    afterEach(() => {
+        initStub.restore()
+    })
+
+    it.only('should create new instance', async() => {
+        const modelManager = await ModelManager.getInstance()
+
+        expect(initStub.calledOnce).toBe(true)
+        expect(modelManager.models).toEqual([])
+    })
+})
+```
+
+
+
+<br><br>
 <br><br>
 
 ### Stub internal method call of instance method
@@ -358,6 +390,9 @@ beforeEach(() => {
 })
 ```
 
+
+
+<br><br>
 <br><br>
 
 ### Stub class instance property
