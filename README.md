@@ -460,6 +460,14 @@ console.log(doc)
 ```
 
 
+<br><br>
+
+#### Queries
+```javascript
+sinon.stub(mongoose.Query.prototype, "exec").yields({ name: "MongoError" }, null);
+```
+
+
 
 
 
