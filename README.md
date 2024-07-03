@@ -957,6 +957,12 @@ it('should make a successful request and use timeout', async() => {
 ## Class
 
 <br><br>
+<br><br>
+
+### Spy constructor
+- As far as I see there is now way to spy it
+
+<br><br>
 
 ### Full class 
 ```javascript
