@@ -502,6 +502,11 @@ sinon.stub(mongoose.Query.prototype, "exec").yields({ name: "MongoError" }, null
 ## Class
 
 
+<br><br>
+<br><br>
+
+### Stub constructor
+- As far as I read it is not possible
 
 <br><br>
 <br><br>
