@@ -173,6 +173,7 @@ _________________________________
 
 
 # Stub
+- https://sinonjs.org/releases/latest/stubs/
 - This will be used to intercept functions and to return custom response
 ```javascript
 innerFunctionStub = sinon.stub(nodemailer, 'createTransport').returns({
