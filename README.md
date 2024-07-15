@@ -183,6 +183,37 @@ innerFunctionStub = sinon.stub(nodemailer, 'createTransport').returns({
 <details><summary>Click to expand..</summary>
 
 
+    
+<br><br>
+<br><br>
+
+## Restore standalone stub
+```javascript
+beforeEach(async () => {
+    repoStub = sinon.stub().returns({
+        jsonSchema: {
+            properties: {
+                _updatedAt: true,
+                _updatedBy: true,
+                _createdAt: true,
+                _createdBy: true,
+                _deletedAt: true,
+                _deletedBy: true
+            }
+        }
+    })
+})
+
+afterEach(() => {
+    repoStub.reset()
+})
+```
+
+
+
+
+
+
 
     
 <br><br>
