@@ -302,60 +302,167 @@ it('should listen for new pair events and save them to the database', async() =>
 <br><br>
 
 # Events
+- The best approach is to simply outsource your callback of your event into a own method that you can easily export it and write unit tests for this method.
+  - Then you only write 1x unit tests which makes that the correct callback function is called.
 
 <br><br>
 <br><br>
 
-## Example #1
-- You have access to the callback function because it is not directly hardcoded to the event instead schon outsourced it somewhere
-```javascript
+
+## Stub Service Event with Event Emitter
+- Another way is to stub the event in your service with an event emitter which you are emitting in your test. This is how you can trigger your callback in this case `getNewPairsEventHandler()`
+  - `getNewPairsEventHandler()` in this case a class method which can be easily stubbed or spyed with sinon.
+
+service.ts:
+```typescript
 private getNewPairsEventHandler() {
-  return async(event: pairEvent) => {
-      // ..
-  }
+    return async(event: pairEvent) => {
+       //...
+    }
 }
 
+// Listen for new pairs
 public async getNewPairs() {
-      const newPairsEvent = await this.uniswapPairCreatedFactory.events.PairCreated()
+    const newPairsEvent = await this.uniswapPairCreatedFactory.events.PairCreated()
 
-      newPairsEvent.on('data', this.getNewPairsEventHandler())
+    newPairsEvent.on('data', this.getNewPairsEventHandler())
 
-      newPairsEvent.on('error', (e: Error) => {
-          throw new BaseError('Error fetching new pairs', e)
-      })
+    newPairsEvent.on('error', (e: Error) => {
+        throw new BaseError('Error fetching new pairs', e)
+    })
 }
 ```
-```javascript
-beforeEach(() => {
-    const eventHandlerFn = (<any>ethCoinManager.contract).getNewPairsEventHandler()
 
-    uniswapPairCreatedFactoryStub = sinon.stub(
-        ethCoinManager.contract.uniswapPairCreatedFactory, 'events'
-    ).returns({
-        PairCreated: sinon.stub().returns(eventHandlerFn)
+test.ts:
+```typescript
+  describe('[SUCCESS]', () => {
+      let uniswapPairCreatedFactoryStub: sinon.SinonStub
+      let eventHandlerFn: any
+      let newPairsEvent: EventEmitter
+      let uniswapPairCreatedFactoryStub: sinon.SinonStub
+
+      const expectedEventArgs = {
+            returnValues: { token0, token1, pair }
+        }
+
+      beforeEach(() => {
+          eventHandlerFn = (<any>ethCoinManager.contract).getNewPairsEventHandler()
+
+          newPairsEvent = new EventEmitter()
+
+          uniswapPairCreatedFactoryStub = sinon.stub(
+              ethCoinManager.contract.uniswapPairCreatedFactory.events, 'PairCreated'
+          ).resolves(newPairsEvent)
+      })    
+
+      afterEach(() => {
+          uniswapPairCreatedFactoryStub.restore()
+      })
+  
+      it.only('should listen for new pair events and save them to the database', async() => {
+          await getNewPairs()
+
+          await new Promise(resolve => {
+              newPairsEvent.once('data', () => {
+                  resolve(true)
+              })
+        
+              newPairsEvent.emit('data', expectedEventArgs)
+          })
+
+          expect(anythinghere)
+      })
+  })
+```
+
+<br><br>
+<br><br>
+
+
+## Stub Service Event with Event Emitter and throw Error
+- Same idea like above `Stub Service Event with Event Emitter`
+  - However, in this example we will trigger the error Event. It is just a callback with a catch of the error and then pass it to a custom error logger.
+
+service.ts
+```javascript
+// Listen for new pairs
+public async getNewPairs() {
+    const newPairsEvent = await this.uniswapPairCreatedFactory.events.PairCreated()
+
+    newPairsEvent.on('data', this.getNewPairsEventHandler())
+
+    newPairsEvent.on('error', (e: Error) => {
+        throw new BaseError('Error fetching new pairs', e)
+    })
+}
+```
+
+test.js
+```javascript
+describe('[newPairsEvent]', () => {
+    let newPairsEvent: EventEmitter
+    let uniswapPairCreatedFactoryStub: sinon.SinonStub
+
+    const errorMessage = 'Test error'
+
+    beforeEach(() => {
+        newPairsEvent = new EventEmitter()
+
+        uniswapPairCreatedFactoryStub = sinon.stub(
+            ethCoinManager.contract.uniswapPairCreatedFactory.events, 'PairCreated'
+        ).resolves(newPairsEvent)
+    })    
+
+    afterEach(() => {
+        uniswapPairCreatedFactoryStub.restore()
+    })
+
+    it('should throw an error if there is an error fetching new pairs', async() => {
+        await ethCoinManager.contract.getNewPairs()
+
+        try {
+            newPairsEvent.emit('error', new Error(errorMessage))
+            expect(true).toBe(false)
+        } catch (e: any) {
+            expect(e.name).toBe('BaseError')
+            expect(e.message).toBe('Error fetching new pairs')
+            expect(e.httpStatus).toBe(500)
+            expect(e.e.message).toBe(errorMessage)
+        }
     })
 })
-
-afterEach(() => {
-    uniswapPairCreatedFactoryStub.restore()
-})
-
-it('should listen for new pair events and save them to the database', async() => {
-    await ethCoinManager.contract.getNewPairs()
-
-    const eventHandler = uniswapPairCreatedFactoryStub().PairCreated()
-    
-    const event = {
-        returnValues: { token0, token1, pair }
-    }
-
-    await eventHandler(event)
-
-    expect(getTokenDetailsStub.calledWith(token0, ERC20_ABI_TOKEN_DETAILS)).toBe(true)
-    expect(getTokenDetailsStub.calledWith(token1, ERC20_ABI_TOKEN_DETAILS)).toBe(true)
-    expect(getTokenDetailsStub.calledWith(pair, ERC20_ABI_TOKEN_DETAILS)).toBe(true)
-})
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
