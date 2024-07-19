@@ -303,15 +303,15 @@ it('should listen for new pair events and save them to the database', async() =>
 
 # Events
 - The best approach is to simply outsource your callback of your event into a own method that you can easily export it and write unit tests for this method.
-  - Then you only write 1x unit tests which makes that the correct callback function is called.
+  - Then you only write 1x unit tests which makes sure that the correct callback function is called.
 
 <br><br>
 <br><br>
 
 
 ## Stub Service Event with Event Emitter
-- Another way is to stub the event in your service with an event emitter which you are emitting in your test. This is how you can trigger your callback in this case `getNewPairsEventHandler()`
-  - `getNewPairsEventHandler()` in this case a class method which can be easily stubbed or spyed with sinon.
+- Stub the event in your service with an event emitter which you are emitting in your test. This is how you can trigger your callback in this case `getNewPairsEventHandler()`
+  - `getNewPairsEventHandler()` in this case is a class method which can be easily stubbed or spyed with sinon if needed.
 
 service.ts:
 ```typescript
@@ -432,6 +432,7 @@ describe('[newPairsEvent]', () => {
     })
 })
 ```
+
 
 
 
