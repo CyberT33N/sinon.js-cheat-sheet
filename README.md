@@ -1108,6 +1108,17 @@ afterEach(() => {
 
 
 
+<br><br>
+<br><br>
+
+# firstCall
+```shell
+expect(spy.firstCall.calledWith(modelName)).to.be.true
+```
+
+
+
+
 
 
 <br><br>
