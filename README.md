@@ -74,7 +74,12 @@ _________________________________
 <br><br>
 
 
-## calledWith
+## Expected state
+- The methods listed below will be called on created stubs/spies
+
+
+
+### calledWith
 ```javascript
 expect(getTokenDetailsStub.calledWith(token0, ERC20_ABI_TOKEN_DETAILS)).toBe(true)
 expect(getTokenDetailsStub.calledWith(token1, ERC20_ABI_TOKEN_DETAILS)).toBe(true)
@@ -86,28 +91,28 @@ expect(getTokenDetailsStub.calledWith(pair, ERC20_ABI_TOKEN_DETAILS)).toBe(true)
 <br><br>
 
 
-## calledOnceWithExactly
+### calledOnceWithExactly
 ```javascript
 expect(axiosRequestStub.calledOnceWithExactly({ test: true )).toBe(true)
 ```
 
 <br><br>
 
-## calledOnceWith
+### calledOnceWith
 ```javascript
 expect(getCurrentPriceStub.calledOnceWith('ETH', 'USD')).toBe(true)
 ```
 
 <br><br>
 
-## callCount
+### callCount
 ```javascript
 expect(calculateWeiToUsdSpy.callCount).toBe(4)
 ```
 
 <br><br>
 
-## getCalls
+### getCalls
 ```javascript
 const calls = calculateWeiToUsdSpy.getCalls()
 
@@ -123,17 +128,95 @@ currencyExchangeHistoryResponse.market_data.current_price.usd
 ])
 ```
 
+<br><br>
 
+### firstCall
+```javascript
+expect(acceptNewStateStub.firstCall.calledWithExactly({ newState })).to.be.true
+```
 
 <br><br>
 
-## withArgs
+### secondCall
+```javascript
+expect(acceptNewStateStub.secondCall.calledWithExactly({ newState2 })).to.be.true
+```
+
+
+
+
+
+
+
+
+
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+
+
+
+## Returned state
+- The methods below can be used to return something
+
+<br><br>
+
+### withArgs
 ```javascript
 getTokenDetailsStub = sinon.stub(ethCoinManager.contract, 'getTokenDetails')
 getTokenDetailsStub.withArgs(token0, ERC20_ABI_TOKEN_DETAILS).resolves(token0Details)
 getTokenDetailsStub.withArgs(token1, ERC20_ABI_TOKEN_DETAILS).resolves(token1Details)
 getTokenDetailsStub.withArgs(pair, ERC20_ABI_TOKEN_DETAILS).resolves(pairDetails)  
 ```
+
+
+
+<br><br>
+<br><br>
+
+## onFirstCall 
+```javascript
+require("@fatso83/mini-mocha").install();
+
+const sinon = require("sinon");
+const referee = require("@sinonjs/referee");
+const assert = referee.assert;
+
+describe("stub", function () {
+    it("should behave differently on consecutive calls with certain argument", function () {
+        const callback = sinon.stub();
+        callback
+            .withArgs(42)
+            .onFirstCall()
+            .returns(1)
+            .onSecondCall()
+            .returns(2);
+        callback.returns(0);
+
+        assert.equals(callback(1), 0);
+        assert.equals(callback(42), 1);
+        assert.equals(callback(1), 0);
+        assert.equals(callback(42), 2);
+        assert.equals(callback(1), 0);
+        assert.equals(callback(42), 0);
+    });
+});
+```
+
+
+<br><br>
+
+## onSecondCall
+```javascript
+acceptNewStateStub.onSecondCall().resolves(docClone)
+```
+
+
+
+
+
+
 
 </details>
 
