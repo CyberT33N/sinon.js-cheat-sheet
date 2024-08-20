@@ -1137,6 +1137,67 @@ _________________________________
 
 <details><summary>Click to expand..</summary>
 
+
+
+
+
+
+## module.exports
+
+<br><br>
+<br><br>
+
+
+### Export object with functions inside
+
+service.js
+```javascript
+const service = {
+    a() {
+        console.log('a()')
+    },
+
+    b() {
+        console.log('a()')
+        this.a()
+    }
+}
+
+module.exports = service
+```
+
+
+test.js
+```javascript
+const service = require(`/service.js`)
+
+const {
+    a, b
+} = service
+
+describe('[Task ID]', () => {
+     let aSpy
+
+     beforeEach(async () => {
+         aSpy = sinon.spy(service, 'a')
+     })
+
+     it.only('should call a()', async () => {
+         await service.b()
+         expect(aSpy.called).to.be.equal(true)
+     })
+ })
+```
+- We must use service.b()
+
+
+
+
+
+<br><br>
+<br><br>
+
+<br><br>
 <br><br>
 
 ## Reset spy
