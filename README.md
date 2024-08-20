@@ -1143,6 +1143,7 @@ _________________________________
 
 
 ## module.exports
+- **It will only work when you export a object with functions inside that call each other with this. Or you create a class**
 
 <br><br>
 <br><br>
