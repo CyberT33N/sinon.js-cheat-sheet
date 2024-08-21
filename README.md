@@ -74,6 +74,35 @@ _________________________________
 <br><br>
 
 
+
+## Response
+- The methods listed below will be related to the response of the spy/stub
+
+<br><br>
+
+### returnValues
+```javascript
+spy.returnValues[0]
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+
 ## Expected state
 - The methods listed below will be called on created stubs/spies
 
