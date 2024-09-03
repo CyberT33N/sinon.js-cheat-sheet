@@ -370,6 +370,101 @@ innerFunctionStub = sinon.stub(nodemailer, 'createTransport').returns({
 <details><summary>Click to expand..</summary>
 
 
+
+## module.exports
+- Spy / Stub will not directly work with `module.exports = { fn }` and a default object destructering `const { fn } = require('./utils')`.
+  - Instead you must use the object in your service `const utilsService = require('./utils')`
+
+utils.js
+```javascript
+const applr = () => {
+  console.log('applr()')
+}
+
+module.exports = { applr }
+```
+
+service.js
+```javascript
+const utilsService = require('./utils')
+
+const fn = () => {
+    utilsService.applr()
+}
+
+module.exports = { fn }
+```
+
+test.js
+```javascript
+const service = require(`/service.js`)
+const utilsService = require('./utils')
+
+const {
+    fn
+} = service
+
+describe('[Task ID]', () => {
+     let applrStub
+
+     beforeEach(async () => {
+         applrStub = sinon.stub(utilsService, 'applr')
+     })
+
+     it.only('should call applr()', async () => {
+         await service.fn()
+         expect(applrStub.called).to.be.equal(true)
+     })
+ })
+```
+
+<br><br>
+<br><br>
+
+
+### Export object with functions inside
+- **It will only work when you export a object with functions inside that call each other with this. Or you create a class**
+
+service.js
+```javascript
+const service = {
+    a() {
+        console.log('a()')
+    },
+
+    b() {
+        console.log('a()')
+        this.a()
+    }
+}
+
+module.exports = service
+```
+
+
+test.js
+```javascript
+const service = require(`/service.js`)
+
+const {
+    a, b
+} = service
+
+describe('[Task ID]', () => {
+     let aStub
+
+     beforeEach(async () => {
+         aStub = sinon.stub(service, 'a')
+     })
+
+     it.only('should call a()', async () => {
+         await service.b()
+         expect(aStub.called).to.be.equal(true)
+     })
+ })
+```
+- We must use service.b()
+
     
 <br><br>
 <br><br>
@@ -407,12 +502,6 @@ afterEach(() => {
 <br><br>
 
 ## Function
-
-<br><br>
-<br><br>
-
-### Single exported function
-- As far as I read it is not working out of the box with sinon.js
 
 
 <br><br>
@@ -1246,13 +1335,59 @@ _________________________________
 
 
 ## module.exports
-- **It will only work when you export a object with functions inside that call each other with this. Or you create a class**
+- Spy / Stub will not directly work with `module.exports = { fn }` and a default object destructering `const { fn } = require('./utils')`.
+  - Instead you must use the object in your service `const utilsService = require('./utils')`
+
+utils.js
+```javascript
+const applr = () => {
+  console.log('applr()')
+}
+
+module.exports = { applr }
+```
+
+service.js
+```javascript
+const utilsService = require('./utils')
+
+const fn = () => {
+    utilsService.applr()
+}
+
+module.exports = { fn }
+```
+
+
+test.js
+```javascript
+const service = require(`/service.js`)
+const utilsService = require('./utils')
+
+const {
+    fn
+} = service
+
+describe('[Task ID]', () => {
+     let applrSpy
+
+     beforeEach(async () => {
+         applrSpy = sinon.spy(utilsService, 'applr')
+     })
+
+     it.only('should call applr()', async () => {
+         await service.fn()
+         expect(applrSpy.called).to.be.equal(true)
+     })
+ })
+```
 
 <br><br>
 <br><br>
 
 
 ### Export object with functions inside
+- **It will only work when you export a object with functions inside that call each other with this. Or you create a class**
 
 service.js
 ```javascript
