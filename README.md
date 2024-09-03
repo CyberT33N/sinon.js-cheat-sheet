@@ -64,6 +64,78 @@ _________________________________
 <br><br>
 
 
+# Matcher API
+- https://sinonjs.org/releases/latest/matchers/
+- Matchers can be passed as arguments to spy.calledOn, spy.calledWith, spy.returned and the corresponding sinon.assert functions as well as spy.withArgs. Matchers allow to be either more fuzzy or more specific about the expected value.
+ 
+<details><summary>Click to expand..</summary>
+    
+<br><br>
+<br><br>
+
+
+<br><br>
+
+## sinon.match.any
+- https://sinonjs.org/releases/latest/matchers/#sinonmatchany
+```javascript
+mock.expects('myFunction').withExactArgs('foo', sinon.match.any, sinon.match.any).returns('foo');         
+```
+
+<br><br>
+
+## sinon.match.object
+```javascript
+expect(kafkaSenderStub.calledOnceWith(headers, sinon.match.object)).to.be.true        
+```
+
+
+
+
+
+</details>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<br><br>
+<br><br>
+_________________________________
+_________________________________
+<br><br>
+<br><br>
+
+
+
 # Methods
 - https://sinonjs.org/releases/latest/spies/
 - Should work with spies and stubs
@@ -107,6 +179,8 @@ spy.returnValues[0]
 - The methods listed below will be called on created stubs/spies
 
 
+<br><br>
+<br><br>
 
 ### calledWith
 ```javascript
