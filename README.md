@@ -371,6 +371,28 @@ innerFunctionStub = sinon.stub(nodemailer, 'createTransport').returns({
 
 
 
+
+
+
+
+<br><br>
+<br><br>
+
+## return & resolve
+- You use return for sync methods and resolve für async methods
+```typescript
+createSchemaStub = sinon.stub(
+    MongooseUtils, 'createSchema'
+).returns(mongooseSchema)
+```
+```typescript
+getConnectionStub = sinon.stub(
+    MongooseUtils.prototype, 'getConnection' as keyof MongooseUtils
+).resolves(Promise.resolve(conn))
+```
+
+
+
 ## module.exports
 - Spy / Stub will not directly work with `module.exports = { fn }` and a default object destructering `const { fn } = require('./utils')`.
   - Instead you must use the object in your service `const utilsService = require('./utils')`
