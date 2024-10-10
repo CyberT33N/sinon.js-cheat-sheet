@@ -1312,7 +1312,7 @@ For good writing style you should use arrow functions to avoid tseslint error un
     }
 ```
 
-- **NOTICE that sinon stub/spies will not work anymore with the the class prototype when you use arrow functions. You can only use the instance**
+- **NOTICE that sinon stub/spies will not work anymore with the the class prototype when you use arrow functions and maybe other things also not working. You can only use the instance. For this reason I would recommend to not use arrow functions in cases where you can the function to e.g. a event handler you should bind the instance to it .bind(classInstacne)**
 ```typescript
 // Will not work anymore
 initStub = sinon.stub(
