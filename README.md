@@ -1281,6 +1281,50 @@ describe('sendMessage', () => {
       })
 })
 ```
+
+
+
+
+
+<br><br>
+<br><br>
+
+### Mock method properties (arrow functions)
+For good writing style you should use arrow functions to avoid tseslint error unbount-methods.
+```typescript
+    /**
+     * Creates a Mongoose model based on the given name, schema, and database name.
+     * @template TMongooseSchema - The type of the mongoose schema.
+     * @param modelDetails - An object containing the model's details.
+     * @returns A promise that resolves to the created Mongoose Model instance.
+     */
+    public createModel = async({
+        modelName,
+        schema,
+        dbName
+    })  => {
+        const mongooseUtils = MongooseUtils.getInstance(dbName)
+        const Model = await mongooseUtils.createModel(schema, modelName)
+        
+        // Ensure indexes are created for the model
+        await Model.createIndexes()
+        return Model
+    }
+```
+
+- **NOTICE that sinon stub/spies will not work anymore with the the class prototype when you use arrow functions. You can only use the instance**
+```typescript
+// Will not work anymore
+initStub = sinon.stub(
+    ModelManager.prototype, 'init' as keyof ModelManager
+).resolves()
+
+// Will work
+initStub = sinon.stub(
+    modelManager, 'init' as keyof ModelManager
+).resolves()
+```
+
 </details>
 
 
