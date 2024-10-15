@@ -530,13 +530,26 @@ afterEach(() => {
 <br><br>
 
 ### Stub chained function calls
+
+### Example #1
+- https://stackoverflow.com/questions/37948135/how-do-i-stub-a-chain-of-methods-in-sinon
+- IMHO, we can just use returns to do this. We don't need to use callsFake or mock it as function.
 ```javascript
-const [name, symbol, decimals, totalSupply] = await Promise.all([
-    tokenContract.methods.name().call(),
-    tokenContract.methods.symbol().call(),
-    tokenContract.methods.decimals().call(),
-    tokenContract.methods.totalSupply().call()
-])
+```
+
+### Example #2
+```javascript
+// Cars.find().fetch()
+sinon.stub(Cars, 'find').returns({
+  fetch: sinon.stub().returns(anything)
+});
+
+// Cars.find().fetch().where()
+
+sinon.stub(Cars, 'find').returns({
+  fetch: sinon.stub().returnsThis(),
+  where: sinon.stub().returns(anything)
+});
 ```
 
 ```javascript
