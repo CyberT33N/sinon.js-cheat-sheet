@@ -530,14 +530,10 @@ afterEach(() => {
 <br><br>
 
 ### Stub chained function calls
-
-### Example #1
 - https://stackoverflow.com/questions/37948135/how-do-i-stub-a-chain-of-methods-in-sinon
+  
+### Example #1
 - IMHO, we can just use returns to do this. We don't need to use callsFake or mock it as function.
-```javascript
-```
-
-### Example #2
 ```javascript
 // Cars.find().fetch()
 sinon.stub(Cars, 'find').returns({
@@ -552,6 +548,31 @@ sinon.stub(Cars, 'find').returns({
 });
 ```
 
+<br>
+
+### Example #2
+```javascript
+sandbox.stub(Cars, "find", () => {
+    return {
+        fetch: sinon.stub().returns(anything);
+    };
+});
+```
+
+<br>
+
+### Example #3
+```javascript
+sandbox.stub(Cars, "find").callsFake(() => {
+    return {
+        fetch: sinon.stub().returns(anything);
+    };
+});
+```
+
+<br>
+
+### Example #4
 ```javascript
 beforeEach(() => {
     createContractStub = sinon.stub(ethCoinManager.contract, 'createContract').returns({
